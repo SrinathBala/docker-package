@@ -34,7 +34,7 @@ jobs:
           echo "build_commit_date=$(git show -s --format=%cI)" >> $GITHUB_ENV
           echo "build_date=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
           echo "build_image_repo=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
-          echo "build_image=ghcr.io/${{ github.repository }}/my-app:${VERSION}" >> $GITHUB_ENV
+          echo "build_image=ghcr.io/${{ github.repository }}:${VERSION}" >> $GITHUB_ENV
       - name: Print Environment Variables
         run: |
           echo "build_version: ${{ env.build_version }}"
