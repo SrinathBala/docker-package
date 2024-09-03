@@ -35,6 +35,15 @@ jobs:
           echo "build_date=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
           echo "build_image_repo=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
           echo "build_image=ghcr.io/${{ github.repository }}:${VERSION}" >> $GITHUB_ENV
+      - name: Print Environment Variables
+        run: |
+          echo "build_version: ${{ env.build_version }}"
+          echo "build_target: ${{ env.build_target }}"
+          echo "build_gitref: ${{ env.build_gitref }}"
+          echo "build_commit_date: ${{ env.build_commit_date }}"
+          echo "build_date: ${{ env.build_date }}"
+          echo "build_image_repo: ${{ env.build_image_repo }}"
+          echo "build_image: ${{ env.build_image }}"
       - name: Set up QEMU
         id: qemu
         uses: docker/setup-qemu-action@v2
@@ -49,29 +58,29 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and Push
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          #cache-from: type=local,src=/tmp/.buildx-cache
-          #cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
-          platforms: ${{ env.build_target }}
-          tags: ${{ env.build_image }}
-          build-args: |
-            APP_VERSION=${{ env.build_version }}
-            COMMIT_HASH=${{ github.sha }}
-            COMMIT_DATE=${{ env.build_commit_date }}
-            BUILD_DATE=${{ env.build_date }}
-            GIT_REF=${{ env.build_gitref }}
-            BUILD_BY=github-actions
-          labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ env.build_version }}
-            org.opencontainers.image.created=${{ env.build_date }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
-            org.opencontainers.image.documentation=https://identity-manager.io/
+      # - name: Build and Push
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     context: .
+      #     push: true
+      #     #cache-from: type=local,src=/tmp/.buildx-cache
+      #     #cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+      #     platforms: ${{ env.build_target }}
+      #     tags: ${{ env.build_image }}
+      #     build-args: |
+      #       APP_VERSION=${{ env.build_version }}
+      #       COMMIT_HASH=${{ github.sha }}
+      #       COMMIT_DATE=${{ env.build_commit_date }}
+      #       BUILD_DATE=${{ env.build_date }}
+      #       GIT_REF=${{ env.build_gitref }}
+      #       BUILD_BY=github-actions
+      #     labels: |
+      #       org.opencontainers.image.title=${{ github.event.repository.name }}
+      #       org.opencontainers.image.description=${{ github.event.repository.description }}
+      #       org.opencontainers.image.url=${{ github.event.repository.html_url }}
+      #       org.opencontainers.image.source=${{ github.event.repository.clone_url }}
+      #       org.opencontainers.image.version=${{ env.build_version }}
+      #       org.opencontainers.image.created=${{ env.build_date }}
+      #       org.opencontainers.image.revision=${{ github.sha }}
+      #       org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
+      #       org.opencontainers.image.documentation=https://identity-manager.io/
